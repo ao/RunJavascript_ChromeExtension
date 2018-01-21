@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Run Javascript</title>
+    <style>
+      body {
+        overflow: hidden;
+        margin: 0px;
+        padding: 0px;
+        background: white;
+      }
+      #editor {
+        width: 600px;
+        height: 500px;
+      }
+      #runJavascript {
+        padding: 5px 10px;
+        border: gray;
+        font-weight: bold;
+        font-size: 14px;
+        cursor:pointer;
+      }
+    </style>
+    <script src="popup.js"></script>
+  </head>
+  <body>
+    <div id="editor"></div>
+
+    <script src="ace.js" type="text/javascript" charset="utf-8"></script>
+
+    <input type="button" value="Save & Run Javascript" id="runJavascript" />
+  </body>
+</html>

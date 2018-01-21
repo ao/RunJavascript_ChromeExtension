@@ -1,0 +1,41 @@
+{
+  "name": "Run Javascript",
+  "description": "Run custom Javascript",
+  "version": "1.0",
+  "permissions": [
+    "tabs", "http://*/*", "https://*/*",
+    "storage",
+    "contextMenus",
+    "cookies",
+    "notifications"
+  ],
+  "browser_action": {
+      "default_title": "Run Javascript",
+      "default_icon": "icon.png",
+      "default_popup": "popup.html"
+  },
+  "icons": {
+    "16": "icon.png",
+    "32": "icon-32.png",
+    "48": "icon-48.png",
+    "64": "icon-64.png",
+    "96": "icon-96.png",
+    "128": "icon-128.png",
+    "256": "icon-256.png"
+  },
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": true
+  },
+  "content_scripts": [
+      {
+      "matches": [
+          "http://*/*",
+          "https://*/*"
+          ],
+      "js": ["inject.js"],
+      "run_at": "document_end"
+      }
+  ],
+  "manifest_version": 2
+}
