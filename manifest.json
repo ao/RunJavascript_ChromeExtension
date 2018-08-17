@@ -1,7 +1,7 @@
 {
   "name": "Run Javascript",
-  "description": "Run custom Javascript",
-  "version": "1.0",
+  "description": "Run custom Javascript, each time you visit a website/domain",
+  "version": "1.1",
   "permissions": [
     "tabs", "http://*/*", "https://*/*",
     "storage",
