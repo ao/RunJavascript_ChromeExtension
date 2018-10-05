@@ -13,12 +13,16 @@ chrome.tabs.query({
 
     chrome.storage.sync.get(function(obj) {
         var js = obj[_key];
-        if (js == undefined || js == 'undefined') {
-            js = '';
+        if (typeof js == undefined) {
+            js = {'code':'','enabled':'true'};
+        } else if (typeof js == 'string') {
+            js = {'code':js,'enabled':'true'};
         }
-        chrome.tabs.executeScript(null, {
-      		code: js
-      	});
+        if (js.enabled) {
+            chrome.tabs.executeScript(null, {
+                code: js.code
+            });
+        }
     });
 
 });

@@ -2,6 +2,7 @@ var editor;
 var data;
 var host;
 var key;
+var enabled;
 
 
 function extractHostname(url) {
@@ -16,21 +17,45 @@ function extractHostname(url) {
     return hostname;
 }
 
-function saveChanges() {
-    var js = editor.getValue();
-    if (js == undefined || js == 'undefined') {
-        js = '';
+function saveChanges(dont_run) {
+    var _code = editor.getValue();
+    var js = {'code':_code, 'enabled':enabled};
+
+    if (_code == undefined || _code == 'undefined') {
+        js = {'code':'','enabled':'true'};
     }
+
     var _data = new Object();
     _data['runjavascript_'+host] = js;
 
-    chrome.storage.sync.set(_data, function() {
-        //
-    });
+    chrome.storage.sync.set(_data, function() {});
 
-    chrome.tabs.executeScript(null, {
-      code: js
-    });
+    if (typeof dont_run === 'undefined') {
+        //stop toggleOnHost from running the script again!
+    }
+    else {
+        if (enabled) {
+            chrome.tabs.executeScript(null, {
+                code: js.code
+            });
+        }
+    }    
+}
+
+function showRightToggleOnHostButton() {
+    if (!enabled) {
+        document.getElementById('_toggle_host_name_enable').style.display = 'inline-block';
+        document.getElementById('_toggle_host_name_disable').style.display = 'none';
+    } else {
+        document.getElementById('_toggle_host_name_enable').style.display = 'none';
+        document.getElementById('_toggle_host_name_disable').style.display = 'inline-block';
+    }
+}
+
+function toggleOnHost() {
+    enabled = !enabled;
+    showRightToggleOnHostButton();
+    saveChanges(true);
 }
 
 function update_ace_placeholder() {
@@ -64,20 +89,30 @@ chrome.tabs.query({
     lastFocusedWindow: true
 }, function(tabs) {
     var tab = tabs[0];
-    host = extractHostname(tab.url);
-    key = 'runjavascript_'+host;
+    if (tab) {
+        host = extractHostname(tab.url);
+        key = 'runjavascript_'+host;
+        document.getElementById('_toggle_host_name').innerHTML = host;
+        showRightToggleOnHostButton();
+    }
 });
 
 document.addEventListener('DOMContentLoaded', function () {
     editor = ace.edit("editor");
     document.getElementById('runJavascript').addEventListener('click', saveChanges);
+    document.getElementById('runToggleOnHost').addEventListener('click', toggleOnHost);
 
     chrome.storage.sync.get(function(obj) {
         var js = obj['runjavascript_'+host];
-        if (js == undefined || js == 'undefined') {
-            js = '';
+        if (typeof js == 'string') {
+            js = {'code':js,'enabled':'true'};
         }
-        editor.setValue(js);
+        if (typeof js == undefined) {
+            js = {'code':'','enabled':'true'};
+        }
+        enabled = js.enabled;
+        showRightToggleOnHostButton();
+        editor.setValue(js.code);
     });
 
     editor.on("input", update_ace_placeholder);

@@ -9,27 +9,55 @@
         padding: 0px;
         background: white;
       }
+      #header {
+        width: 600px;
+        height: 35px;
+      }
       #editor {
         width: 600px;
         height: 500px;
       }
       #runJavascript {
-        padding: 5px 10px;
+        padding: 7px 10px;
         border: 1px outset gray;
         font-weight: bold;
-        font-size: 14px;
+        font-size: 12px;
+        display: inline-block;
         cursor: pointer;
         background: green;
         color: white;
+        text-decoration: none;
+        border-radius: 2px;
       }
+      #runToggleOnHost {
+        padding: 7px 10px;
+        border: 1px outset gray;
+        font-weight: bold;
+        font-size: 12px;
+        display: inline-block;
+        cursor: pointer;
+        background: #d0d0d0;
+        border-radius: 2px;
+        color: black;
+        float: right;
+        text-decoration: none;
+      }
+        #_toggle_host_name_enable {
+          background-color:green;
+        }
+        #_toggle_host_name_disable {
+          background-color:orange;
+        }
     </style>
     <script src="popup.js"></script>
   </head>
   <body>
+    <div id="header">
+      <a href="javascript:;" id="runJavascript">Save &amp; Run</a>
+      <a href="javascript:;" id="runToggleOnHost"><span id="_toggle_host_name_enable">Enable</span><span id="_toggle_host_name_disable">Disable</span> on <span id='_toggle_host_name'></span></a>
+    </div>
     <div id="editor"></div>
 
     <script src="ace.js" type="text/javascript" charset="utf-8"></script>
-
-    <input type="button" value="'Save & Run' each time I visit this domain" id="runJavascript" />
   </body>
 </html>
