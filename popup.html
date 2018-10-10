@@ -10,11 +10,11 @@
         background: white;
       }
       #header {
-        width: 600px;
+        width: 800px;
         height: 35px;
       }
       #editor {
-        width: 600px;
+        width: 800px;
         height: 500px;
       }
       #runJavascript {
@@ -31,30 +31,32 @@
       }
       #runToggleOnHost {
         padding: 7px 10px;
-        border: 1px outset gray;
         font-weight: bold;
         font-size: 12px;
         display: inline-block;
-        cursor: pointer;
-        background: #d0d0d0;
-        border-radius: 2px;
         color: black;
         float: right;
         text-decoration: none;
       }
-        #_toggle_host_name_enable {
-          background-color:green;
+        #runToggleOnHost:hover, #chkToggleOnHost_span {
+          cursor: pointer;
         }
-        #_toggle_host_name_disable {
-          background-color:orange;
-        }
+      #help_a {
+        font-weight: bold;
+        padding: 2px 10px;
+        text-decoration: none;
+        color: red;
+      }
     </style>
     <script src="popup.js"></script>
   </head>
   <body>
     <div id="header">
       <a href="javascript:;" id="runJavascript">Save &amp; Run</a>
-      <a href="javascript:;" id="runToggleOnHost"><span id="_toggle_host_name_enable">Enable</span><span id="_toggle_host_name_disable">Disable</span> on <span id='_toggle_host_name'></span></a>
+      <a href="https://ao.gl/run-javascript-chrome-extension-help/" target="_blank" id="help_a">Help</a>
+      <div id="runToggleOnHost">
+        <input type="checkbox" id="chkToggleOnHost" /> <label for="chkToggleOnHost" id="chkToggleOnHost_span">Enable on <span id='_toggle_host_name'></span></label>
+      </div>
     </div>
     <div id="editor"></div>
 

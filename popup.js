@@ -43,16 +43,11 @@ function saveChanges(dont_run) {
 }
 
 function showRightToggleOnHostButton() {
-    if (!enabled) {
-        document.getElementById('_toggle_host_name_enable').style.display = 'inline-block';
-        document.getElementById('_toggle_host_name_disable').style.display = 'none';
-    } else {
-        document.getElementById('_toggle_host_name_enable').style.display = 'none';
-        document.getElementById('_toggle_host_name_disable').style.display = 'inline-block';
-    }
+    document.getElementById('chkToggleOnHost').checked = !(!enabled);
 }
 
 function toggleOnHost() {
+    console.log('changing ', !enabled);
     enabled = !enabled;
     showRightToggleOnHostButton();
     saveChanges(true);
@@ -100,7 +95,7 @@ chrome.tabs.query({
 document.addEventListener('DOMContentLoaded', function () {
     editor = ace.edit("editor");
     document.getElementById('runJavascript').addEventListener('click', saveChanges);
-    document.getElementById('runToggleOnHost').addEventListener('click', toggleOnHost);
+    document.getElementById('chkToggleOnHost').addEventListener('change', toggleOnHost);
 
     chrome.storage.sync.get(function(obj) {
         var js = obj['runjavascript_'+host];
