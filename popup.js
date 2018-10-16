@@ -95,7 +95,7 @@ function update_ace_placeholder() {
         editor.renderer.scroller.appendChild(node);
 
         node2 = editor.renderer.emptyMessageNode2 = document.createElement("div");
-        node2.textContent = "JQuery 3.3.1 is loaded, so you can use all your favourite $ shortcuts!"
+        node2.textContent = "jQuery 3.3.1 is loaded, so you can use all your favourite $ shortcuts!"
         node2.className = "ace_invisible ace_emptyMessage"
         node2.style.padding = "10px 5px 5px 5px"
         editor.renderer.scroller.appendChild(node2);
