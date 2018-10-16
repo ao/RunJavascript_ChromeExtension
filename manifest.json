@@ -1,13 +1,14 @@
 {
   "name": "Run Javascript",
   "description": "Run custom Javascript, each time you visit a website",
-  "version": "1.5",
+  "version": "1.6",
   "permissions": [
     "tabs", "http://*/*", "https://*/*",
     "storage",
     "contextMenus",
     "cookies",
-    "notifications"
+    "notifications",
+    "activeTab"
   ],
   "browser_action": {
       "default_title": "Run Javascript",
@@ -30,10 +31,12 @@
   "content_scripts": [
       {
       "matches": [
-          "http://*/*",
-          "https://*/*"
-          ],
-      "js": ["inject.js"],
+        "http://*/*",
+        "https://*/*"
+      ],
+      "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+      "permissions": ["lib_jquery_3_3_1.js", "lib_jquery_2_2_4.js", "lib_jquery_1_12_4.js"],
+      "js": ["lib_jquery_3_3_1.js", "inject.js"],
       "run_at": "document_end"
       }
   ],

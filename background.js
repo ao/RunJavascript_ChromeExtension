@@ -1,5 +1,7 @@
 chrome.browserAction.setBadgeText({text: "js()"});
 
+
+
 var _host;
 var _key;
 
@@ -14,14 +16,29 @@ chrome.tabs.query({
     chrome.storage.sync.get(function(obj) {
         var js = obj[_key];
         if (typeof js == undefined) {
-            js = {'code':'','enabled':'true'};
+            js = {'code':'','enabled':'true','library':'jquery_3_3_1'};
         } else if (typeof js == 'string') {
-            js = {'code':js,'enabled':'true'};
+            js = {'code':js,'enabled':'true','library':'jquery_3_3_1'};
         }
         if (js.enabled) {
-            chrome.tabs.executeScript(null, {
-                code: js.code
-            });
+            
+            // var lib_file = js.library=="" ? "" : "lib_"+js.library+'.js';
+                
+            // if (lib_file!='') {
+            //     chrome.tabs.executeScript(null, {
+            //         file: lib_file
+            //     }, function() {
+            //         chrome.tabs.executeScript(null, {
+            //             code: js.code
+            //         });
+            //     });
+            // } else {
+                if (js.code!="") {
+                    chrome.tabs.executeScript(null, {
+                        code: js.code
+                    });
+                }
+            // }
         }
     });
 
