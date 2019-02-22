@@ -9,29 +9,10 @@ chrome.extension.sendMessage({}, function(response) {
                 } else if (typeof js == 'string') {
                     js = {'code':js,'enabled':'true','library':'jquery_3_3_1'};
                 }
-                if (js.enabled) {
-
-                    // var lib_file = js.library=="" ? "" : "lib_"+js.library+'.js';
-                    
-                    // if (lib_file!='') {
-
-
-                    //     function loadScript(url) {
-                    //         var x = new XMLHttpRequest();
-                    //         x.onload = function() {
-                    //             alert(js.code);
-                    //             eval(js.code);
-                    //         };
-                    //         x.open('GET', url);
-                    //         x.send();
-                    //     }
-                    //     loadScript(lib_file);
-
-                    // } else {
-                        if (js.code!="") {
-                            eval(js.code);
-                        }
-                    // }
+                if (js && js.enabled) {
+                    if (js.code && js.code!="") {
+                        eval(js.code);
+                    }
                 }
             });
         }
