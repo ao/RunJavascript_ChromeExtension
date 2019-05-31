@@ -51,6 +51,17 @@
         text-decoration: none;
         color: red;
       }
+      #lblUpdated {
+        display: none;
+        background: yellow;
+        color: black;
+        padding: 5px 10px;
+        position: absolute;
+        left: 34%;
+        top: 4px;
+        z-index: 999;
+        border-radius: 7px;
+      }
     </style>
     <script src="popup.js"></script>
   </head>
@@ -59,6 +70,7 @@
       <a href="javascript:;" id="runJavascript">Save &amp; Run</a>
       <a href="https://ao.gl/run-javascript-chrome-extension-help/?from=extension&click=help" target="_blank" id="help_a">Help</a>
 
+      <div id="lblUpdated">Changes has been applied..</div>
 
       <div id="runToggleOnHost">
         <input type="checkbox" id="chkToggleOnHost" /> <label for="chkToggleOnHost" id="chkToggleOnHost_span">Enable on <span id='_toggle_host_name'></span></label>

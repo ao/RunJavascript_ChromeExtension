@@ -55,7 +55,11 @@ function saveChanges(dont_run) {
                 });
             // }
         }
-    }    
+    }
+    document.getElementById("lblUpdated").style.display = "inline-block";
+    setTimeout(function() {
+        document.getElementById("lblUpdated").style.display = "none";
+    }, 2000);
 }
 
 function showRightToggleOnHostButton() {
@@ -135,10 +139,10 @@ document.addEventListener('DOMContentLoaded', function () {
         if (typeof js == undefined) {
             js = {'code':'','enabled':'true','library':''};
         }
-        enabled = js.enabled;
+        enabled = js && js.enabled ? js.enabled : false;
         showRightToggleOnHostButton();
-        editor.setValue(js.code);
-        library = js.library;
+        editor.setValue(js && js.code ? js.code : "");
+        library = js && js.library ? js.library : "";
         document.getElementById('slLibrary').value = library;
     });
 
@@ -146,3 +150,31 @@ document.addEventListener('DOMContentLoaded', function () {
     setTimeout(update_ace_placeholder, 100);
 
 });
+
+// Standard Google Universal Analytics code
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga'); // Note: https protocol here
+    ga('create', 'UA-68468918-2', 'auto');
+    ga('set', 'checkProtocolTask', function(){}); // Removes failing protocol check. @see: http://stackoverflow.com/a/22152353/1958200
+    ga('require', 'displayfeatures');
+    ga('send', 'pageview', '/popup.html');
+    
+
+function trackButton(e) {
+    _gaq.push(['_trackEvent', e.target.id, 'clicked']);
+};
+
+var buttons = document.querySelectorAll('button');
+for (var i = 0; i < buttons.length; i++) {
+    buttons[i].addEventListener('click', trackButtonClick);
+}
+var anchors = document.querySelectorAll('a');
+for (var i = 0; i < anchors.length; i++) {
+    anchors[i].addEventListener('click', trackButtonClick);
+}
+var inputs = document.querySelectorAll('input');
+for (var i = 0; i < inputs.length; i++) {
+    inputs[i].addEventListener('click', trackButtonClick);
+}
