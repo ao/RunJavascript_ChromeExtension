@@ -39,21 +39,9 @@ function saveChanges(dont_run) {
     }
     else {
         if (enabled) {
-            // var lib_file = js.library=="" ? "" : "lib_"+js.library+'.js';
-
-            // if (lib_file!='') {
-            //     chrome.tabs.executeScript(null, {
-            //         file: lib_file
-            //     }, function() {
-            //         chrome.tabs.executeScript(null, {
-            //             code: js.code
-            //         });
-            //     });
-            // } else {
-                chrome.tabs.executeScript(null, {
-                    code: js.code
-                });
-            // }
+            chrome.tabs.executeScript(null, {
+                code: js.code
+            });
         }
     }
     document.getElementById("lblUpdated").style.display = "inline-block";
@@ -121,6 +109,7 @@ chrome.tabs.query({
         host = extractHostname(tab.url);
         key = 'runjavascript_'+host;
         document.getElementById('_toggle_host_name').innerHTML = host;
+        //setAndRenderEnabledOn(host);
         showRightToggleOnHostButton();
     }
 });
@@ -178,3 +167,15 @@ var inputs = document.querySelectorAll('input');
 for (var i = 0; i < inputs.length; i++) {
     inputs[i].addEventListener('click', trackButtonClick);
 }
+
+// function getEnabledOn() {
+//     chrome.storage.sync.get(function(obj) {
+
+//     });
+// }
+
+// function setAndRenderEnabledOn(host) {
+//     console.log(host);
+//     document.getElementById('regexMatchHost').value = host+'/*';
+//     document.getElementById('regexMatchHost').placeholder = host+'/*';
+// }

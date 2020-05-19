@@ -57,10 +57,16 @@
         color: black;
         padding: 5px 10px;
         position: absolute;
-        left: 34%;
+        left: 24%;
         top: 4px;
         z-index: 999;
         border-radius: 7px;
+      }
+      #regexMatchHost {
+        width: 300px;
+        padding: 2px;
+        border-radius: 3px;
+        border: 1px solid #cccccc;
       }
     </style>
     <script src="popup.js"></script>
@@ -73,6 +79,8 @@
       <div id="lblUpdated">Changes has been applied..</div>
 
       <div id="runToggleOnHost">
+        <!--<input type="text" id="regexMatchHost" value="" placeholder="" />
+        <input type="checkbox" id="chkToggleOnHost" /> <label for="chkToggleOnHost" id="chkToggleOnHost_span">Enable</label>-->
         <input type="checkbox" id="chkToggleOnHost" /> <label for="chkToggleOnHost" id="chkToggleOnHost_span">Enable on <span id='_toggle_host_name'></span></label>
       </div>
 

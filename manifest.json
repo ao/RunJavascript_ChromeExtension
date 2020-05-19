@@ -1,13 +1,9 @@
 {
   "name": "Run Javascript",
   "description": "Run custom Javascript, each time you visit a website",
-  "version": "1.8",
+  "version": "1.11",
   "permissions": [
-    "tabs", "http://*/*", "https://*/*",
     "storage",
-    "contextMenus",
-    "cookies",
-    "notifications",
     "activeTab"
   ],
   "browser_action": {

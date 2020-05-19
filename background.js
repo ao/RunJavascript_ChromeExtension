@@ -28,3 +28,11 @@ chrome.tabs.query({
     });
 
 });
+
+chrome.runtime.onInstalled.addListener(function (object) {
+    if (object.reason === 'install') {
+        chrome.tabs.create({url: "https://ao.gl/run-javascript-chrome-extension-help/"}, function (tab) {
+            //
+        });
+    }
+});
