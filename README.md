@@ -5,4 +5,4 @@ A simple Chrome Extension that allows you to run some Javascript each time you a
 https://chrome.google.com/webstore/detail/run-javascript/lmilalhkkdhfieeienjbiicclobibjao
 
 ## Get help
-https://ao.gl/run-javascript-chrome-extension-help/
+https://blog.ataiva.com/run-javascript-chrome-extension-help/

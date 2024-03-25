@@ -1,0 +1,65 @@
+body {
+    overflow: hidden;
+    margin: 0px;
+    padding: 0px;
+    background: white;
+  }
+  #header {
+    width: 800px;
+    height: 35px;
+  }
+  #editor {
+    width: 800px;
+    height: 500px;
+  }
+  #runJavascript {
+    padding: 7px 10px;
+    border: 1px outset gray;
+    font-weight: bold;
+    font-size: 12px;
+    display: inline-block;
+    cursor: pointer;
+    background: green;
+    color: white;
+    text-decoration: none;
+    border-radius: 2px;
+  }
+  #runToggleOnHost {
+    padding: 7px 10px;
+    font-weight: bold;
+    font-size: 12px;
+    display: inline-block;
+    color: black;
+    float: right;
+    text-decoration: none;
+  }
+    #runToggleOnHost:hover, #chkToggleOnHost_span {
+      cursor: pointer;
+    }
+  #libraryDropdownContainer {
+    float:right;
+    margin:8px 10px 0 0;
+  }
+  #help_a {
+    font-weight: bold;
+    padding: 2px 10px;
+    text-decoration: none;
+    color: red;
+  }
+  #lblUpdated {
+    display: none;
+    background: yellow;
+    color: black;
+    padding: 5px 10px;
+    position: absolute;
+    left: 24%;
+    top: 4px;
+    z-index: 999;
+    border-radius: 7px;
+  }
+  #regexMatchHost {
+    width: 300px;
+    padding: 2px;
+    border-radius: 3px;
+    border: 1px solid #cccccc;
+  }
