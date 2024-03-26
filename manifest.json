@@ -1,20 +1,15 @@
 {
   "name": "Run Javascript",
   "description": "Run custom Javascript, each time you visit a website",
-  "version": "1.2.0",
-  "manifest_version": 3,
+  "version": "3.0.1",
   "permissions": [
     "storage",
     "activeTab"
   ],
-  "action": {
-    "default_popup": "popup.html",
-    "default_icon": {
-      "16": "icon.png",
-      "32": "icon-32.png",
-      "48": "icon-48.png",
-      "128": "icon-128.png"
-    }
+  "browser_action": {
+      "default_title": "Run Javascript",
+      "default_icon": "icon.png",
+      "default_popup": "popup.html"
   },
   "icons": {
     "16": "icon.png",
@@ -26,23 +21,20 @@
     "256": "icon-256.png"
   },
   "background": {
-    "service_worker": "background.js"
+    "scripts": ["background.js"],
+    "persistent": true
   },
   "content_scripts": [
-    {
+      {
       "matches": [
         "http://*/*",
         "https://*/*"
       ],
+      "content_security_policy": "script-src 'self' https://www.google-analytics.com; script-src 'self' 'unsafe-eval'; object-src 'self'",
+      "permissions": ["lib_jquery_3_3_1.js", "lib_jquery_2_2_4.js", "lib_jquery_1_12_4.js"],
       "js": ["lib_jquery_3_3_1.js", "inject.js"],
       "run_at": "document_idle"
-    }
+      }
   ],
-  "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'",
-    "sandbox": "sandbox allow-scripts",
-    "web_accessible_resources": ["*"],
-    "script-src": ["'self'"],
-    "script-src-elem": ["'self'", "https://www.google-analytics.com"]
-  }
+  "manifest_version": 2
 }
