@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>JavaScript Sandbox</title>
+</head>
+<body>
+    <script>
+        // Store jQuery versions
+        let jQueryVersions = {};
+        let isReady = false;
+        
+        // Function to load a script dynamically
+        function loadScript(src, callback) {
+            const script = document.createElement('script');
+            script.src = src;
+            script.onload = callback;
+            script.onerror = function() {
+                console.error('Failed to load script:', src);
+                callback();
+            };
+            document.head.appendChild(script);
+        }
+        
+        // Initialize jQuery libraries
+        function initializeLibraries(libraryUrls) {
+            // console.log('[SANDBOX DEBUG] initializeLibraries called with:', libraryUrls);
+            let loadedCount = 0;
+            const totalLibraries = Object.keys(libraryUrls).length;
+            // console.log('[SANDBOX DEBUG] Total libraries to load:', totalLibraries);
+            
+            function onLibraryLoaded() {
+                loadedCount++;
+                // console.log('[SANDBOX DEBUG] Library loaded, count:', loadedCount, '/', totalLibraries);
+                if (loadedCount === totalLibraries) {
+                    isReady = true;
+                    // console.log('[SANDBOX DEBUG] All libraries loaded, sending ready message');
+                    window.parent.postMessage({ status: 'ready' }, '*');
+                }
+            }
+            
+            // Load jQuery 3.3.1
+            if (libraryUrls.jquery_3_3_1) {
+                loadScript(libraryUrls.jquery_3_3_1, function() {
+                    if (typeof jQuery !== 'undefined') {
+                        jQueryVersions['jquery_3_3_1'] = jQuery.noConflict(true);
+                    }
+                    onLibraryLoaded();
+                });
+            }
+            
+            // Load jQuery 2.2.4
+            if (libraryUrls.jquery_2_2_4) {
+                loadScript(libraryUrls.jquery_2_2_4, function() {
+                    if (typeof jQuery !== 'undefined') {
+                        jQueryVersions['jquery_2_2_4'] = jQuery.noConflict(true);
+                    }
+                    onLibraryLoaded();
+                });
+            }
+            
+            // Load jQuery 1.12.4
+            if (libraryUrls.jquery_1_12_4) {
+                loadScript(libraryUrls.jquery_1_12_4, function() {
+                    if (typeof jQuery !== 'undefined') {
+                        jQueryVersions['jquery_1_12_4'] = jQuery.noConflict(true);
+                    }
+                    onLibraryLoaded();
+                });
+            }
+        }
+
+        // Listen for messages from the parent
+        window.addEventListener('message', function(event) {
+            // console.log('[SANDBOX DEBUG] Message received:', event.data);
+            try {
+                const data = event.data;
+                
+                // Initialize libraries if URLs are provided
+                if (data.libraryUrls && !isReady) {
+                    // console.log('[SANDBOX DEBUG] Initializing libraries:', data.libraryUrls);
+                    initializeLibraries(data.libraryUrls);
+                    return;
+                }
+                
+                // Handle code execution - prepare code and send to main page
+                if (data.code && isReady) {
+                    // console.log('[SANDBOX DEBUG] Preparing code for main page execution:', data.library, 'Code length:', data.code.length);
+                    
+                    // Prepare the code with jQuery setup if needed
+                    let preparedCode = '';
+                    
+                    if (data.library && data.library !== '') {
+                        // console.log('[SANDBOX DEBUG] Preparing code with jQuery library:', data.library);
+                        // Add jQuery setup to the code
+                        preparedCode = `
+                            // Auto-injected jQuery setup for library: ${data.library}
+                            (function() {
+                                try {
+                                    // User code execution
+                                    ${data.code}
+                                } catch (error) {
+                                    console.error('Error executing user code:', error);
+                                }
+                            })();
+                        `;
+                    } else {
+                        // console.log('[SANDBOX DEBUG] Preparing code without jQuery');
+                        // No library needed, wrap in IIFE for safety
+                        preparedCode = `
+                            (function() {
+                                try {
+                                    ${data.code}
+                                } catch (error) {
+                                    console.error('Error executing user code:', error);
+                                }
+                            })();
+                        `;
+                    }
+                    
+                    // console.log('[SANDBOX DEBUG] Sending prepared code to main page for execution');
+                    // Send prepared code to main page for execution
+                    window.parent.postMessage({
+                        status: 'execute_in_main',
+                        preparedCode: preparedCode
+                    }, '*');
+                    
+                } else if (data.code && !isReady) {
+                    // console.log('[SANDBOX DEBUG] Libraries not ready, preparing code without jQuery');
+                    // Libraries not ready yet, prepare code without jQuery
+                    const preparedCode = `
+                        (function() {
+                            try {
+                                ${data.code}
+                            } catch (error) {
+                                console.error('Error executing user code:', error);
+                            }
+                        })();
+                    `;
+                    
+                    window.parent.postMessage({
+                        status: 'execute_in_main',
+                        preparedCode: preparedCode
+                    }, '*');
+                } else if (data.code) {
+                    console.log('[SANDBOX DEBUG] Code received but conditions not met. isReady:', isReady);
+                }
+                
+            } catch (error) {
+                console.error('[SANDBOX DEBUG] Error executing script:', error);
+                // Send error message back
+                window.parent.postMessage({
+                    status: 'error',
+                    message: error.message,
+                    stack: error.stack
+                }, '*');
+            }
+        });
+        
+        // Send initial ready message (for cases where no jQuery is needed)
+        // console.log('[SANDBOX DEBUG] Sending initial ready message');
+        window.parent.postMessage({ status: 'ready' }, '*');
+    </script>
+</body>
+</html>

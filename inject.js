@@ -1,29 +1,13 @@
-// Wait for the document to be fully loaded
-chrome.runtime.sendMessage({}, function(response) {
-    var readyStateCheckInterval = setInterval(function() {
-        if (document.readyState === "complete") {
-            clearInterval(readyStateCheckInterval);
-            // Extract hostname from the current URL
-            var host = extractHostname(location.href);
-            var key = 'runjavascript_' + host;
-            // Retrieve JavaScript code from storage
-            chrome.storage.sync.get(key, function(obj) {
-                var js = obj[key];
-                if (typeof js === 'undefined') {
-                    js = {'code': '', 'enabled': 'true', 'library': 'jquery_3_3_1'};
-                } else if (typeof js === 'string') {
-                    js = {'code': js, 'enabled': 'true', 'library': 'jquery_3_3_1'};
-                }
-                // If JavaScript is enabled and code exists, execute it
-                if (js.enabled && js.code && js.code !== "") {
-                    eval(js.code);
-                }
-            });
-        }
-    }, 10);
+// Content script - simplified to just provide utility functions
+// Auto-execution is now handled by the background script via chrome.tabs.onUpdated
+chrome.runtime.sendMessage({action: 'content_script_loaded'}, function(response) {
+    // Content script is ready
 });
 
-// Function to extract hostname from URL
+// Content script now only handles signaling readiness to background script
+// All execution logic moved to background script to prevent duplication and ensure consistency
+
+// Utility function kept for potential future use
 function extractHostname(url) {
     var hostname;
     if (url.indexOf("://") > -1) {

@@ -35,29 +35,52 @@ function saveChanges(dont_run) {
     chrome.storage.sync.set(_data, function() {});
 
     if (typeof dont_run === 'undefined') {
-        //stop toggleOnHost from running the script again!
-    }
-    else {
         if (enabled) {
-            chrome.tabs.executeScript(null, {
-                code: js.code
+            chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+                if (tabs && tabs[0] && tabs[0].id) {
+                    // Send message to background script to execute the script
+                    // This ensures consistent execution logic and prevents duplication
+                    chrome.runtime.sendMessage({
+                        action: 'execute_script',
+                        tabId: tabs[0].id,
+                        code: js.code,
+                        library: library
+                    });
+                }
             });
         }
     }
+    
     document.getElementById("lblUpdated").style.display = "inline-block";
     setTimeout(function() {
         document.getElementById("lblUpdated").style.display = "none";
     }, 2000);
 }
 
+// setupSandbox function removed - using the one from background.js via chrome.scripting.executeScript
+// This eliminates code duplication and potential inconsistencies
+
 function showRightToggleOnHostButton() {
     document.getElementById('chkToggleOnHost').checked = !(!enabled);
 }
 
 function toggleOnHost() {
+    const wasEnabled = enabled;
     enabled = !enabled;
     showRightToggleOnHostButton();
     saveChanges(true);
+    
+    // If we're disabling the extension (was enabled, now disabled), reload the page
+    if (wasEnabled && !enabled) {
+        // console.log('[DEBUG] Extension disabled, reloading page to unapply changes');
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            if (tabs && tabs[0] && tabs[0].id) {
+                chrome.tabs.reload(tabs[0].id);
+                // Close the popup after initiating reload
+                window.close();
+            }
+        });
+    }
 }
 
 function setLibrary() {
@@ -109,73 +132,46 @@ chrome.tabs.query({
         host = extractHostname(tab.url);
         key = 'runjavascript_'+host;
         document.getElementById('_toggle_host_name').innerHTML = host;
-        //setAndRenderEnabledOn(host);
         showRightToggleOnHostButton();
     }
 });
 
 document.addEventListener('DOMContentLoaded', function () {
     editor = ace.edit("editor");
-    document.getElementById('runJavascript').addEventListener('click', saveChanges);
+    document.getElementById('runJavascript').addEventListener('click', function(e) {
+        e.preventDefault();
+        saveChanges();
+    });
     document.getElementById('chkToggleOnHost').addEventListener('change', toggleOnHost);
     document.getElementById('slLibrary').addEventListener('change', setLibrary);
 
     chrome.storage.sync.get(function(obj) {
         var js = obj['runjavascript_'+host];
-        if (typeof js == 'string') {
-            js = {'code':js,'enabled':'true','library':''};
+        
+        // Normalize data structure - handle legacy formats
+        if (typeof js === 'string') {
+            // Legacy string format
+            js = {'code': js, 'enabled': 'true', 'library': 'jquery_3_3_1'};
+        } else if (typeof js === 'undefined' || js === null) {
+            // No data found
+            js = {'code': '', 'enabled': 'true', 'library': 'jquery_3_3_1'};
+        } else if (typeof js === 'object') {
+            // Ensure all required properties exist with defaults
+            js = {
+                'code': js.code || '',
+                'enabled': js.enabled !== undefined ? js.enabled : 'true',
+                'library': js.library || 'jquery_3_3_1'
+            };
         }
-        if (typeof js == undefined) {
-            js = {'code':'','enabled':'true','library':''};
-        }
-        enabled = js && js.enabled ? js.enabled : false;
+        
+        // Convert string boolean to actual boolean for enabled flag
+        enabled = (js.enabled === true || js.enabled === 'true');
         showRightToggleOnHostButton();
-        editor.setValue(js && js.code ? js.code : "");
-        library = js && js.library ? js.library : "";
+        editor.setValue(js.code || "");
+        library = js.library || 'jquery_3_3_1';
         document.getElementById('slLibrary').value = library;
     });
 
     editor.on("input", update_ace_placeholder);
     setTimeout(update_ace_placeholder, 100);
-
 });
-
-// // Standard Google Universal Analytics code
-// (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-//     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-//     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-//     })(window,document,'script','https://www.google-analytics.com/analytics.js','ga'); // Note: https protocol here
-//     ga('create', 'UA-68468918-2', 'auto');
-//     ga('set', 'checkProtocolTask', function(){}); // Removes failing protocol check. @see: http://stackoverflow.com/a/22152353/1958200
-//     ga('require', 'displayfeatures');
-//     ga('send', 'pageview', '/popup.html');
-    
-
-function trackButton(e) {
-    _gaq.push(['_trackEvent', e.target.id, 'clicked']);
-};
-
-var buttons = document.querySelectorAll('button');
-for (var i = 0; i < buttons.length; i++) {
-    buttons[i].addEventListener('click', trackButtonClick);
-}
-var anchors = document.querySelectorAll('a');
-for (var i = 0; i < anchors.length; i++) {
-    anchors[i].addEventListener('click', trackButtonClick);
-}
-var inputs = document.querySelectorAll('input');
-for (var i = 0; i < inputs.length; i++) {
-    inputs[i].addEventListener('click', trackButtonClick);
-}
-
-// function getEnabledOn() {
-//     chrome.storage.sync.get(function(obj) {
-
-//     });
-// }
-
-// function setAndRenderEnabledOn(host) {
-//     console.log(host);
-//     document.getElementById('regexMatchHost').value = host+'/*';
-//     document.getElementById('regexMatchHost').placeholder = host+'/*';
-// }
