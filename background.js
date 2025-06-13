@@ -65,7 +65,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 });
 
 // Execute script function for V3 - using world: 'MAIN' for proper execution context
-async function executeScriptInTab(tabId, code, library = 'jquery_3_3_1') {
+async function executeScriptInTab(tabId, code, library = '') {
     // console.log('[DEBUG] executeScriptInTab called for tab:', tabId, 'library:', library, 'code length:', code.length);
     try {
         // First, inject jQuery library if needed using world: 'MAIN'
@@ -126,10 +126,10 @@ function executeScriptForTab(tab) {
         var js = data[key];
         // console.log('[DEBUG] Retrieved data for', key, ':', js);
         if (typeof js === 'undefined') {
-            js = { 'code': '', 'enabled': 'true', 'library': 'jquery_3_3_1' };
+            js = { 'code': '', 'enabled': 'true', 'library': '' }; // Default to no library
             // console.log('[DEBUG] No stored script found, using defaults');
         } else if (typeof js === 'string') {
-            js = { 'code': js, 'enabled': 'true', 'library': 'jquery_3_3_1' };
+            js = { 'code': js, 'enabled': 'true', 'library': '' }; // Default to no library
             // console.log('[DEBUG] Converting legacy string format to object');
         }
         if (js.enabled && js.code) {

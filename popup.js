@@ -20,14 +20,18 @@ function extractHostname(url) {
 
 function saveChanges(dont_run) {
     var _code = editor.getValue();
+    
+    // Get the current library selection BEFORE creating the js object
+    library = document.getElementById('slLibrary').value;
+    console.log('Before creating js object - library:', library);
+    
     var js = {'code':_code, 'enabled':enabled, 'library':library};
 
     if (_code == undefined || _code == 'undefined') {
-        js = {'code':'','enabled':'true', 'library':'jquery_3_3_1'};
+        js = {'code':'','enabled':'true', 'library':library}; // Use current library selection
     }
-
-    //set the library again...
-    library = document.getElementById('slLibrary').value;
+    
+    console.log('js object being saved:', js);
 
     var _data = new Object();
     _data['runjavascript_'+host] = js;
@@ -81,6 +85,7 @@ function toggleOnHost() {
             }
         });
     }
+console.log('setLibrary called - setting library to:', document.getElementById('slLibrary').value);
 }
 
 function setLibrary() {
@@ -110,7 +115,7 @@ function update_ace_placeholder() {
         editor.renderer.scroller.appendChild(node);
 
         node2 = editor.renderer.emptyMessageNode2 = document.createElement("div");
-        node2.textContent = "jQuery 3.3.1 is loaded, so you can use all your favourite $ shortcuts!"
+        node2.textContent = "Select a jQuery library if needed for your script"
         node2.className = "ace_invisible ace_emptyMessage"
         node2.style.padding = "10px 5px 5px 5px"
         editor.renderer.scroller.appendChild(node2);
@@ -142,25 +147,30 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();
         saveChanges();
     });
+console.log('Loading storage for host:', host, 'key:', key);
     document.getElementById('chkToggleOnHost').addEventListener('change', toggleOnHost);
+console.log('Storage data loaded:', js);
     document.getElementById('slLibrary').addEventListener('change', setLibrary);
 
     chrome.storage.sync.get(function(obj) {
         var js = obj['runjavascript_'+host];
         
+        // Get the current library selection from dropdown
+        var currentLibrary = document.getElementById('slLibrary').value || '';
+        
         // Normalize data structure - handle legacy formats
         if (typeof js === 'string') {
             // Legacy string format
-            js = {'code': js, 'enabled': 'true', 'library': 'jquery_3_3_1'};
+            js = {'code': js, 'enabled': 'true', 'library': currentLibrary};
         } else if (typeof js === 'undefined' || js === null) {
             // No data found
-            js = {'code': '', 'enabled': 'true', 'library': 'jquery_3_3_1'};
+            js = {'code': '', 'enabled': 'true', 'library': currentLibrary};
         } else if (typeof js === 'object') {
             // Ensure all required properties exist with defaults
             js = {
                 'code': js.code || '',
                 'enabled': js.enabled !== undefined ? js.enabled : 'true',
-                'library': js.library || 'jquery_3_3_1'
+                'library': js.library || currentLibrary
             };
         }
         
@@ -168,7 +178,9 @@ document.addEventListener('DOMContentLoaded', function () {
         enabled = (js.enabled === true || js.enabled === 'true');
         showRightToggleOnHostButton();
         editor.setValue(js.code || "");
-        library = js.library || 'jquery_3_3_1';
+        // Use the current library selection if no library is specified in storage
+        var currentLibrary = document.getElementById('slLibrary').value || '';
+        library = js.library || currentLibrary;
         document.getElementById('slLibrary').value = library;
     });
 
