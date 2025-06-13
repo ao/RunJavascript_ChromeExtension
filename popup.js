@@ -36,7 +36,23 @@ function saveChanges(dont_run) {
     var _data = new Object();
     _data['runjavascript_'+host] = js;
 
-    chrome.storage.sync.set(_data, function() {});
+    chrome.storage.sync.set(_data, function() {
+        if (chrome.runtime.lastError) {
+            // console.error('[STORAGE DEBUG] Error saving to chrome.storage.sync:', chrome.runtime.lastError);
+            // console.error('[STORAGE DEBUG] Attempted to save data:', _data);
+            
+            // Fallback to local storage if sync fails
+            chrome.storage.local.set(_data, function() {
+                if (chrome.runtime.lastError) {
+                    console.error('[STORAGE DEBUG] Error saving to chrome.storage.local:', chrome.runtime.lastError);
+                } else {
+                    // console.log('[STORAGE DEBUG] Successfully saved to chrome.storage.local as fallback');
+                }
+            });
+        } else {
+            // console.log('[STORAGE DEBUG] Successfully saved to chrome.storage.sync:', _data);
+        }
+    });
 
     if (typeof dont_run === 'undefined') {
         if (enabled) {
@@ -142,18 +158,55 @@ chrome.tabs.query({
 });
 
 document.addEventListener('DOMContentLoaded', function () {
+    // Check Chrome storage quotas and limits
+    chrome.storage.sync.getBytesInUse(null, function(bytesInUse) {
+        console.log('[STORAGE DEBUG] Chrome storage sync bytes in use:', bytesInUse);
+        if (chrome.runtime.lastError) {
+            console.error('[STORAGE DEBUG] Error checking sync storage usage:', chrome.runtime.lastError);
+        }
+    });
+    
+    chrome.storage.local.getBytesInUse(null, function(bytesInUse) {
+        console.log('[STORAGE DEBUG] Chrome storage local bytes in use:', bytesInUse);
+        if (chrome.runtime.lastError) {
+            console.error('[STORAGE DEBUG] Error checking local storage usage:', chrome.runtime.lastError);
+        }
+    });
+    
     editor = ace.edit("editor");
     document.getElementById('runJavascript').addEventListener('click', function(e) {
         e.preventDefault();
         saveChanges();
     });
-console.log('Loading storage for host:', host, 'key:', key);
+    console.log('[STORAGE DEBUG] Loading storage for host:', host, 'key:', key);
     document.getElementById('chkToggleOnHost').addEventListener('change', toggleOnHost);
-console.log('Storage data loaded:', js);
     document.getElementById('slLibrary').addEventListener('change', setLibrary);
 
     chrome.storage.sync.get(function(obj) {
+        console.log('[STORAGE DEBUG] Loading data for host:', host);
+        console.log('[STORAGE DEBUG] Raw storage data:', obj);
+        
+        if (chrome.runtime.lastError) {
+            console.error('[STORAGE DEBUG] Error loading from chrome.storage.sync:', chrome.runtime.lastError);
+            
+            // Fallback to local storage if sync fails
+            chrome.storage.local.get(function(localObj) {
+                console.log('[STORAGE DEBUG] Fallback to local storage, data:', localObj);
+                if (chrome.runtime.lastError) {
+                    console.error('[STORAGE DEBUG] Error loading from chrome.storage.local:', chrome.runtime.lastError);
+                } else {
+                    processStorageData(localObj);
+                }
+            });
+            return;
+        }
+        
+        processStorageData(obj);
+    });
+    
+    function processStorageData(obj) {
         var js = obj['runjavascript_'+host];
+        console.log('[STORAGE DEBUG] Processed data for key runjavascript_' + host + ':', js);
         
         // Get the current library selection from dropdown
         var currentLibrary = document.getElementById('slLibrary').value || '';
@@ -161,18 +214,23 @@ console.log('Storage data loaded:', js);
         // Normalize data structure - handle legacy formats
         if (typeof js === 'string') {
             // Legacy string format
+            console.log('[STORAGE DEBUG] Converting legacy string format');
             js = {'code': js, 'enabled': 'true', 'library': currentLibrary};
         } else if (typeof js === 'undefined' || js === null) {
             // No data found
+            console.log('[STORAGE DEBUG] No data found, using defaults');
             js = {'code': '', 'enabled': 'true', 'library': currentLibrary};
         } else if (typeof js === 'object') {
             // Ensure all required properties exist with defaults
+            console.log('[STORAGE DEBUG] Processing object format');
             js = {
                 'code': js.code || '',
                 'enabled': js.enabled !== undefined ? js.enabled : 'true',
                 'library': js.library || currentLibrary
             };
         }
+        
+        console.log('[STORAGE DEBUG] Final processed data:', js);
         
         // Convert string boolean to actual boolean for enabled flag
         enabled = (js.enabled === true || js.enabled === 'true');
@@ -182,7 +240,9 @@ console.log('Storage data loaded:', js);
         var currentLibrary = document.getElementById('slLibrary').value || '';
         library = js.library || currentLibrary;
         document.getElementById('slLibrary').value = library;
-    });
+        
+        console.log('[STORAGE DEBUG] UI updated - enabled:', enabled, 'library:', library, 'code length:', (js.code || '').length);
+    }
 
     editor.on("input", update_ace_placeholder);
     setTimeout(update_ace_placeholder, 100);

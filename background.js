@@ -123,28 +123,53 @@ function executeScriptForTab(tab) {
     // console.log('[DEBUG] Looking for stored script for host:', host);
 
     chrome.storage.sync.get(key, function (data) {
-        var js = data[key];
-        // console.log('[DEBUG] Retrieved data for', key, ':', js);
-        if (typeof js === 'undefined') {
-            js = { 'code': '', 'enabled': 'true', 'library': '' }; // Default to no library
-            // console.log('[DEBUG] No stored script found, using defaults');
-        } else if (typeof js === 'string') {
-            js = { 'code': js, 'enabled': 'true', 'library': '' }; // Default to no library
-            // console.log('[DEBUG] Converting legacy string format to object');
+        // console.log('[STORAGE DEBUG] Background script loading data for key:', key);
+        // console.log('[STORAGE DEBUG] Background raw storage data:', data);
+        
+        if (chrome.runtime.lastError) {
+            // console.error('[STORAGE DEBUG] Background error loading from chrome.storage.sync:', chrome.runtime.lastError);
+            
+            // Fallback to local storage if sync fails
+            chrome.storage.local.get(key, function (localData) {
+                console.log('[STORAGE DEBUG] Background fallback to local storage, data:', localData);
+                if (chrome.runtime.lastError) {
+                    console.error('[STORAGE DEBUG] Background error loading from chrome.storage.local:', chrome.runtime.lastError);
+                } else {
+                    processBackgroundStorageData(localData, key, tab);
+                }
+            });
+            return;
         }
-        if (js.enabled && js.code) {
-            // Check for duplicate execution before proceeding
-            if (shouldExecuteScript(tab.id, tab.url, js.code)) {
-                // console.log('[DEBUG] Executing script for tab:', tab.id, 'Code length:', js.code.length);
-                // Use the new scripting API
-                executeScriptInTab(tab.id, js.code, js.library);
-            } else {
-                console.log('[DEBUG] Skipping duplicate execution for tab:', tab.id);
-            }
-        } else {
-            console.log('[DEBUG] Script not enabled or empty for host:', host);
-        }
+        
+        processBackgroundStorageData(data, key, tab);
     });
+}
+
+function processBackgroundStorageData(data, key, tab) {
+    var js = data[key];
+    // console.log('[STORAGE DEBUG] Background retrieved data for', key, ':', js);
+    if (typeof js === 'undefined') {
+        js = { 'code': '', 'enabled': 'true', 'library': '' }; // Default to no library
+        // console.log('[STORAGE DEBUG] Background no stored script found, using defaults');
+    } else if (typeof js === 'string') {
+        js = { 'code': js, 'enabled': 'true', 'library': '' }; // Default to no library
+        // console.log('[STORAGE DEBUG] Background converting legacy string format to object');
+    }
+    
+    // console.log('[STORAGE DEBUG] Background final processed data:', js);
+    
+    if (js.enabled && js.code) {
+        // Check for duplicate execution before proceeding
+        if (shouldExecuteScript(tab.id, tab.url, js.code)) {
+            // console.log('[STORAGE DEBUG] Background executing script for tab:', tab.id, 'Code length:', js.code.length);
+            // Use the new scripting API
+            executeScriptInTab(tab.id, js.code, js.library);
+        } else {
+            console.log('[DEBUG] Skipping duplicate execution for tab:', tab.id);
+        }
+    } else {
+        console.log('[DEBUG] Script not enabled or empty for host:', extractHostname(tab.url));
+    }
 }
 
 // Listen for tab activation (switching tabs)
