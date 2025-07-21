@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="61" failures="0" errors="0" time="0.745">
+  <testsuite name="Facebook CSP Regression Tests" errors="0" failures="0" skipped="4" timestamp="2025-07-21T17:01:19" time="0.114" tests="4">
+    <testcase classname="Facebook CSP Regression Tests detects Facebook CSP restrictions" name="Facebook CSP Regression Tests detects Facebook CSP restrictions" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Facebook CSP Regression Tests executes script via script tag with nonce" name="Facebook CSP Regression Tests executes script via script tag with nonce" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Facebook CSP Regression Tests extension injects script correctly with Facebook CSP" name="Facebook CSP Regression Tests extension injects script correctly with Facebook CSP" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Facebook CSP Regression Tests proposed solution: script tag with nonce works with Facebook CSP" name="Facebook CSP Regression Tests proposed solution: script tag with nonce works with Facebook CSP" time="0">
+      <skipped/>
+    </testcase>
+  </testsuite>
+  <testsuite name="Popup.js" errors="0" failures="0" skipped="0" timestamp="2025-07-21T17:01:20" time="0.039" tests="7">
+    <testcase classname="Popup.js saveChanges saves code to chrome.storage.sync" name="Popup.js saveChanges saves code to chrome.storage.sync" time="0.002">
+    </testcase>
+    <testcase classname="Popup.js saveChanges falls back to chrome.storage.local if sync fails" name="Popup.js saveChanges falls back to chrome.storage.local if sync fails" time="0.001">
+    </testcase>
+    <testcase classname="Popup.js saveChanges sends message to execute script if dont_run is undefined" name="Popup.js saveChanges sends message to execute script if dont_run is undefined" time="0">
+    </testcase>
+    <testcase classname="Popup.js saveChanges does not send message to execute script if dont_run is true" name="Popup.js saveChanges does not send message to execute script if dont_run is true" time="0.001">
+    </testcase>
+    <testcase classname="Popup.js saveChanges shows and hides update message" name="Popup.js saveChanges shows and hides update message" time="0">
+    </testcase>
+    <testcase classname="Popup.js update_ace_placeholder adds placeholder elements when editor is empty" name="Popup.js update_ace_placeholder adds placeholder elements when editor is empty" time="0.001">
+    </testcase>
+    <testcase classname="Popup.js update_ace_placeholder removes placeholder elements when editor has content" name="Popup.js update_ace_placeholder removes placeholder elements when editor has content" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="Background Service Worker" errors="0" failures="0" skipped="0" timestamp="2025-07-21T17:01:20" time="0.045" tests="9">
+    <testcase classname="Background Service Worker getExecutionKey generates a unique key based on tabId, URL, and code" name="Background Service Worker getExecutionKey generates a unique key based on tabId, URL, and code" time="0">
+    </testcase>
+    <testcase classname="Background Service Worker getExecutionKey generates different keys for different tabs" name="Background Service Worker getExecutionKey generates different keys for different tabs" time="0">
+    </testcase>
+    <testcase classname="Background Service Worker getExecutionKey generates different keys for different hostnames" name="Background Service Worker getExecutionKey generates different keys for different hostnames" time="0">
+    </testcase>
+    <testcase classname="Background Service Worker getExecutionKey generates different keys for different code" name="Background Service Worker getExecutionKey generates different keys for different code" time="0.013">
+    </testcase>
+    <testcase classname="Background Service Worker shouldExecuteScript returns true for first execution" name="Background Service Worker shouldExecuteScript returns true for first execution" time="0">
+    </testcase>
+    <testcase classname="Background Service Worker shouldExecuteScript returns false for duplicate execution within 5 seconds" name="Background Service Worker shouldExecuteScript returns false for duplicate execution within 5 seconds" time="0.001">
+    </testcase>
+    <testcase classname="Background Service Worker shouldExecuteScript returns true for different scripts" name="Background Service Worker shouldExecuteScript returns true for different scripts" time="0">
+    </testcase>
+    <testcase classname="Background Service Worker shouldExecuteScript cleans up old entries" name="Background Service Worker shouldExecuteScript cleans up old entries" time="0.001">
+    </testcase>
+    <testcase classname="Background Service Worker Chrome API interactions executeScriptInTab calls chrome.scripting.executeScript" name="Background Service Worker Chrome API interactions executeScriptInTab calls chrome.scripting.executeScript" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="Storage Operations Integration" errors="0" failures="0" skipped="0" timestamp="2025-07-21T17:01:20" time="0.032" tests="6">
+    <testcase classname="Storage Operations Integration Popup loading data from storage loads script data for current host" name="Storage Operations Integration Popup loading data from storage loads script data for current host" time="0">
+    </testcase>
+    <testcase classname="Storage Operations Integration Popup loading data from storage falls back to local storage if sync fails" name="Storage Operations Integration Popup loading data from storage falls back to local storage if sync fails" time="0">
+    </testcase>
+    <testcase classname="Storage Operations Integration Background script loading data from storage loads and executes script for tab" name="Storage Operations Integration Background script loading data from storage loads and executes script for tab" time="0.001">
+    </testcase>
+    <testcase classname="Storage Operations Integration Background script loading data from storage handles legacy string format in storage" name="Storage Operations Integration Background script loading data from storage handles legacy string format in storage" time="0">
+    </testcase>
+    <testcase classname="Storage Operations Integration Popup saving data to storage saves script data to sync storage" name="Storage Operations Integration Popup saving data to storage saves script data to sync storage" time="0">
+    </testcase>
+    <testcase classname="Storage Operations Integration Popup saving data to storage falls back to local storage if sync fails" name="Storage Operations Integration Popup saving data to storage falls back to local storage if sync fails" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="extractHostname function" errors="0" failures="0" skipped="0" timestamp="2025-07-21T17:01:20" time="0.03" tests="29">
+    <testcase classname="extractHostname function background.js implementation extracts &quot;www.example.com&quot; from &quot;https://www.example.com/path?query=1&quot;" name="extractHostname function background.js implementation extracts &quot;www.example.com&quot; from &quot;https://www.example.com/path?query=1&quot;" time="0">
+    </testcase>
+    <testcase classname="extractHostname function background.js implementation extracts &quot;example.com&quot; from &quot;http://example.com:8080/path&quot;" name="extractHostname function background.js implementation extracts &quot;example.com&quot; from &quot;http://example.com:8080/path&quot;" time="0">
+    </testcase>
+    <testcase classname="extractHostname function background.js implementation extracts &quot;example.com&quot; from &quot;example.com/path&quot;" name="extractHostname function background.js implementation extracts &quot;example.com&quot; from &quot;example.com/path&quot;" time="0">
+    </testcase>
+    <testcase classname="extractHostname function background.js implementation extracts &quot;subdomain.example.co.uk&quot; from &quot;https://subdomain.example.co.uk/path?query=1#hash&quot;" name="extractHostname function background.js implementation extracts &quot;subdomain.example.co.uk&quot; from &quot;https://subdomain.example.co.uk/path?query=1#hash&quot;" time="0">
+    </testcase>
+    <testcase classname="extractHostname function background.js implementation extracts &quot;www.facebook.com&quot; from &quot;https://www.facebook.com/profile&quot;" name="extractHostname function background.js implementation extracts &quot;www.facebook.com&quot; from &quot;https://www.facebook.com/profile&quot;" time="0">
+    </testcase>
+    <testcase classname="extractHostname function background.js implementation extracts &quot;localhost&quot; from &quot;http://localhost:3000&quot;" name="extractHostname function background.js implementation extracts &quot;localhost&quot; from &quot;http://localhost:3000&quot;" time="0">
+    </testcase>
+    <testcase classname="extractHostname function background.js implementation extracts &quot;192.168.1.1&quot; from &quot;https://192.168.1.1:8080&quot;" name="extractHostname function background.js implementation extracts &quot;192.168.1.1&quot; from &quot;https://192.168.1.1:8080&quot;" time="0">
+    </testcase>
+    <testcase classname="extractHostname function background.js implementation handles undefined input" name="extractHostname function background.js implementation handles undefined input" time="0">
+    </testcase>
+    <testcase classname="extractHostname function popup.js implementation extracts &quot;www.example.com&quot; from &quot;https://www.example.com/path?query=1&quot;" name="extractHostname function popup.js implementation extracts &quot;www.example.com&quot; from &quot;https://www.example.com/path?query=1&quot;" time="0">
+    </testcase>
+    <testcase classname="extractHostname function popup.js implementation extracts &quot;example.com&quot; from &quot;http://example.com:8080/path&quot;" name="extractHostname function popup.js implementation extracts &quot;example.com&quot; from &quot;http://example.com:8080/path&quot;" time="0.001">
+    </testcase>
+    <testcase classname="extractHostname function popup.js implementation extracts &quot;example.com&quot; from &quot;example.com/path&quot;" name="extractHostname function popup.js implementation extracts &quot;example.com&quot; from &quot;example.com/path&quot;" time="0">
+    </testcase>
+    <testcase classname="extractHostname function popup.js implementation extracts &quot;subdomain.example.co.uk&quot; from &quot;https://subdomain.example.co.uk/path?query=1#hash&quot;" name="extractHostname function popup.js implementation extracts &quot;subdomain.example.co.uk&quot; from &quot;https://subdomain.example.co.uk/path?query=1#hash&quot;" time="0">
+    </testcase>
+    <testcase classname="extractHostname function popup.js implementation extracts &quot;www.facebook.com&quot; from &quot;https://www.facebook.com/profile&quot;" name="extractHostname function popup.js implementation extracts &quot;www.facebook.com&quot; from &quot;https://www.facebook.com/profile&quot;" time="0">
+    </testcase>
+    <testcase classname="extractHostname function popup.js implementation extracts &quot;localhost&quot; from &quot;http://localhost:3000&quot;" name="extractHostname function popup.js implementation extracts &quot;localhost&quot; from &quot;http://localhost:3000&quot;" time="0">
+    </testcase>
+    <testcase classname="extractHostname function popup.js implementation extracts &quot;192.168.1.1&quot; from &quot;https://192.168.1.1:8080&quot;" name="extractHostname function popup.js implementation extracts &quot;192.168.1.1&quot; from &quot;https://192.168.1.1:8080&quot;" time="0">
+    </testcase>
+    <testcase classname="extractHostname function inject.js implementation extracts &quot;www.example.com&quot; from &quot;https://www.example.com/path?query=1&quot;" name="extractHostname function inject.js implementation extracts &quot;www.example.com&quot; from &quot;https://www.example.com/path?query=1&quot;" time="0">
+    </testcase>
+    <testcase classname="extractHostname function inject.js implementation extracts &quot;example.com&quot; from &quot;http://example.com:8080/path&quot;" name="extractHostname function inject.js implementation extracts &quot;example.com&quot; from &quot;http://example.com:8080/path&quot;" time="0">
+    </testcase>
+    <testcase classname="extractHostname function inject.js implementation extracts &quot;example.com&quot; from &quot;example.com/path&quot;" name="extractHostname function inject.js implementation extracts &quot;example.com&quot; from &quot;example.com/path&quot;" time="0">
+    </testcase>
+    <testcase classname="extractHostname function inject.js implementation extracts &quot;subdomain.example.co.uk&quot; from &quot;https://subdomain.example.co.uk/path?query=1#hash&quot;" name="extractHostname function inject.js implementation extracts &quot;subdomain.example.co.uk&quot; from &quot;https://subdomain.example.co.uk/path?query=1#hash&quot;" time="0">
+    </testcase>
+    <testcase classname="extractHostname function inject.js implementation extracts &quot;www.facebook.com&quot; from &quot;https://www.facebook.com/profile&quot;" name="extractHostname function inject.js implementation extracts &quot;www.facebook.com&quot; from &quot;https://www.facebook.com/profile&quot;" time="0">
+    </testcase>
+    <testcase classname="extractHostname function inject.js implementation extracts &quot;localhost&quot; from &quot;http://localhost:3000&quot;" name="extractHostname function inject.js implementation extracts &quot;localhost&quot; from &quot;http://localhost:3000&quot;" time="0">
+    </testcase>
+    <testcase classname="extractHostname function inject.js implementation extracts &quot;192.168.1.1&quot; from &quot;https://192.168.1.1:8080&quot;" name="extractHostname function inject.js implementation extracts &quot;192.168.1.1&quot; from &quot;https://192.168.1.1:8080&quot;" time="0">
+    </testcase>
+    <testcase classname="extractHostname function consistency across implementations all implementations return the same result for &quot;https://www.example.com/path?query=1&quot;" name="extractHostname function consistency across implementations all implementations return the same result for &quot;https://www.example.com/path?query=1&quot;" time="0">
+    </testcase>
+    <testcase classname="extractHostname function consistency across implementations all implementations return the same result for &quot;http://example.com:8080/path&quot;" name="extractHostname function consistency across implementations all implementations return the same result for &quot;http://example.com:8080/path&quot;" time="0">
+    </testcase>
+    <testcase classname="extractHostname function consistency across implementations all implementations return the same result for &quot;example.com/path&quot;" name="extractHostname function consistency across implementations all implementations return the same result for &quot;example.com/path&quot;" time="0">
+    </testcase>
+    <testcase classname="extractHostname function consistency across implementations all implementations return the same result for &quot;https://subdomain.example.co.uk/path?query=1#hash&quot;" name="extractHostname function consistency across implementations all implementations return the same result for &quot;https://subdomain.example.co.uk/path?query=1#hash&quot;" time="0">
+    </testcase>
+    <testcase classname="extractHostname function consistency across implementations all implementations return the same result for &quot;https://www.facebook.com/profile&quot;" name="extractHostname function consistency across implementations all implementations return the same result for &quot;https://www.facebook.com/profile&quot;" time="0">
+    </testcase>
+    <testcase classname="extractHostname function consistency across implementations all implementations return the same result for &quot;http://localhost:3000&quot;" name="extractHostname function consistency across implementations all implementations return the same result for &quot;http://localhost:3000&quot;" time="0">
+    </testcase>
+    <testcase classname="extractHostname function consistency across implementations all implementations return the same result for &quot;https://192.168.1.1:8080&quot;" name="extractHostname function consistency across implementations all implementations return the same result for &quot;https://192.168.1.1:8080&quot;" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="Background Script Messaging" errors="0" failures="0" skipped="0" timestamp="2025-07-21T17:01:20" time="0.033" tests="6">
+    <testcase classname="Background Script Messaging handles content_script_loaded message" name="Background Script Messaging handles content_script_loaded message" time="0">
+    </testcase>
+    <testcase classname="Background Script Messaging handles execute_script message" name="Background Script Messaging handles execute_script message" time="0">
+    </testcase>
+    <testcase classname="Background Script Messaging ignores unknown messages" name="Background Script Messaging ignores unknown messages" time="0">
+    </testcase>
+    <testcase classname="Background Script Messaging handles tab activation" name="Background Script Messaging handles tab activation" time="0.003">
+    </testcase>
+    <testcase classname="Background Script Messaging handles tab update" name="Background Script Messaging handles tab update" time="0">
+    </testcase>
+    <testcase classname="Background Script Messaging does not execute script for tab update with incomplete status" name="Background Script Messaging does not execute script for tab update with incomplete status" time="0">
+    </testcase>
+  </testsuite>
+</testsuites>

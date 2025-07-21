@@ -1,0 +1,46 @@
+{
+  "name": "run-javascript-chrome-extension",
+  "version": "4.1.1",
+  "description": "Chrome extension that allows you to run custom JavaScript code automatically each time you visit specific websites",
+  "main": "background.js",
+  "scripts": {
+    "test": "jest",
+    "test:unit": "jest tests/unit",
+    "test:integration": "jest tests/integration",
+    "test:e2e": "jest tests/e2e",
+    "test:csp": "jest tests/csp",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint .",
+    "setup": "npm install --legacy-peer-deps"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ao/RunJavascript_ChromeExtension.git"
+  },
+  "keywords": [
+    "chrome",
+    "extension",
+    "javascript",
+    "inject",
+    "run"
+  ],
+  "author": "Ataiva",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ao/RunJavascript_ChromeExtension/issues"
+  },
+  "homepage": "https://github.com/ao/RunJavascript_ChromeExtension#readme",
+  "devDependencies": {
+    "@types/chrome": "^0.0.246",
+    "@types/jest": "^27.5.2",
+    "eslint": "^8.50.0",
+    "jest": "^27.0.0",
+    "jest-chrome": "^0.8.0",
+    "jest-environment-jsdom": "^27.0.0",
+    "jest-puppeteer": "^6.0.0",
+    "puppeteer": "^21.3.6",
+    "sinon": "^16.0.0",
+    "http-server": "^14.1.1",
+    "jest-junit": "^13.0.0"
+  }
+}
