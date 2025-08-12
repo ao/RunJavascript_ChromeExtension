@@ -1,0 +1,45 @@
+# Bun configuration file
+
+# Set the default framework for testing
+[test]
+# Use the built-in test runner
+preload = "./tests/setup.js"
+coverage = true
+timeout = 10000  # 10 seconds timeout for tests
+
+# Configure the dev server
+[dev]
+port = 3000
+
+# Configure the build process
+[build]
+minify = true
+sourcemap = true
+target = "browser"
+outdir = "dist"
+
+# Configure the install process
+[install]
+# Use exact versions for dependencies
+exact = true
+# Cache dependencies for faster installs
+cache = true
+
+# Configure the runtime
+[runtime]
+env = { NODE_ENV = "development" }
+
+# Configure the formatter
+[formatter]
+# Use Prettier for formatting
+semi = true
+singleQuote = true
+tabWidth = 2
+useTabs = false
+trailingComma = "all"
+
+# Configure the bundler
+[bundler]
+minify = true
+sourcemap = true
+target = "browser"

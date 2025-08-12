@@ -15,7 +15,17 @@ function extractHostname(url) {
     } else {
         hostname = url.split('/')[0];
     }
-    hostname = hostname.split(':')[0];
+    
+    // Special handling for IPv6 addresses which are enclosed in square brackets
+    if (hostname.startsWith('[') && hostname.includes(']')) {
+        // For IPv6, keep everything up to the closing bracket
+        var closingBracketPos = hostname.indexOf(']');
+        hostname = hostname.substring(0, closingBracketPos + 1);
+    } else {
+        // For regular hostnames, remove port if present
+        hostname = hostname.split(':')[0];
+    }
+    
     hostname = hostname.split('?')[0];
     return hostname;
 }
