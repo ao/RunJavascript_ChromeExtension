@@ -1,0 +1,28 @@
+🚀 Chrome Extension Build Report
+================================
+
+Extension: Run Javascript Chrome Extension
+Version: 5.0.0
+Build Date: Fri Aug 15 02:12:40 +04 2025
+Build Type: major
+
+📦 Package Information:
+- File: v5.0.0.zip
+- Size: 836K
+- Files: 23 files
+
+🔧 Build Configuration:
+- Tests: Passed
+- Force mode: Disabled
+
+📋 Included Files:
+
+
+✅ Build completed successfully!
+
+Next steps:
+1. Test the extension by loading it in Chrome developer mode
+2. Upload to Chrome Web Store if ready for release
+3. Create a git tag: git tag v5.0.0
+4. Push changes: git push origin main --tags
+
