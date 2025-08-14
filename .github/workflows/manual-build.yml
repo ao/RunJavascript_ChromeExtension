@@ -1,0 +1,107 @@
+name: Manual Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      create_release:
+        description: 'Create GitHub release'
+        required: false
+        default: false
+        type: boolean
+      publish_to_store:
+        description: 'Publish to Chrome Web Store'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Run tests
+        run: bun test
+
+      - name: Create build directory
+        run: mkdir -p build
+
+      - name: Copy extension files
+        run: |
+          cp manifest.json build/
+          cp popup.html build/
+          cp popup.js build/
+          cp background.js build/
+          cp inject.js build/
+          cp storage.js build/
+          cp -r assets build/ 2>/dev/null || true
+
+      - name: Validate manifest
+        run: |
+          if ! jq empty build/manifest.json; then
+            echo "Invalid manifest.json"
+            exit 1
+          fi
+          echo "Manifest validation passed"
+
+      - name: Get version from manifest
+        id: version
+        run: |
+          VERSION=$(jq -r '.version' build/manifest.json)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Extension version: $VERSION"
+
+      - name: Create extension package
+        run: |
+          cd build
+          zip -r "../run-javascript-extension-v${{ steps.version.outputs.version }}.zip" .
+          cd ..
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chrome-extension-manual-v${{ steps.version.outputs.version }}
+          path: run-javascript-extension-v${{ steps.version.outputs.version }}.zip
+          retention-days: 7
+
+      - name: Create Release
+        if: inputs.create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.version.outputs.version }}-manual
+          name: Manual Release v${{ steps.version.outputs.version }}
+          files: run-javascript-extension-v${{ steps.version.outputs.version }}.zip
+          generate_release_notes: true
+          draft: true
+          prerelease: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload to Chrome Web Store
+        if: inputs.publish_to_store
+        uses: mnao305/chrome-extension-upload@v5.0.0
+        with:
+          file-path: run-javascript-extension-v${{ steps.version.outputs.version }}.zip
+          extension-id: ${{ secrets.CHROME_EXTENSION_ID }}
+          client-id: ${{ secrets.CHROME_CLIENT_ID }}
+          client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
+          refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          publish: true
+
+      - name: Summary
+        run: |
+          echo "## Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Version**: ${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Build Status**: ✅ Success" >> $GITHUB_STEP_SUMMARY
+          echo "- **Create Release**: ${{ inputs.create_release }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Publish to Store**: ${{ inputs.publish_to_store }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Artifact**: chrome-extension-manual-v${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY

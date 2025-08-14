@@ -21,21 +21,42 @@ export function createElementFromHTML(html) {
  * @param {Object} [eventData={}] - Additional data for the event
  */
 export function simulateEvent(element, eventName, eventData = {}) {
+  if (!element) {
+    console.error(`Error simulating ${eventName} event: Element is undefined or null`);
+    return;
+  }
+  
   try {
-    const event = new element.ownerDocument.defaultView.Event(eventName, {
-      bubbles: true,
-      cancelable: true,
-    });
+    // Use the global window if element doesn't have ownerDocument
+    const targetWindow = (element.ownerDocument && element.ownerDocument.defaultView) || window;
     
-    // Add any custom data to the event
-    Object.assign(event, eventData);
-    
-    element.dispatchEvent(event);
+    if (targetWindow && typeof targetWindow.Event === 'function') {
+      const event = new targetWindow.Event(eventName, {
+        bubbles: true,
+        cancelable: true,
+      });
+      
+      // Add any custom data to the event
+      Object.assign(event, eventData);
+      
+      element.dispatchEvent(event);
+    } else {
+      // Fallback for environments without proper Event constructor
+      const event = document.createEvent('Event');
+      event.initEvent(eventName, true, true);
+      
+      // Add any custom data to the event
+      Object.assign(event, eventData);
+      
+      element.dispatchEvent(event);
+    }
   } catch (e) {
     console.error(`Error simulating ${eventName} event:`, e);
-    // Fallback for testing - just call the onclick handler directly if it exists
-    if (eventName === 'click' && typeof element.onclick === 'function') {
+    // Fallback for testing - call the appropriate event handler directly if it exists
+    if (eventName === 'click' && element.onclick && typeof element.onclick === 'function') {
       element.onclick();
+    } else if (eventName === 'change' && element.onchange && typeof element.onchange === 'function') {
+      element.onchange();
     }
   }
 }
@@ -109,36 +130,63 @@ export function wait(ms) {
  * @returns {Object} Mock storage object
  */
 export function createMockStorage(initialData = {}) {
-  const storage = { ...initialData };
-  
-  return {
-    get: sinon.stub().callsFake((key, callback) => {
-      const result = key ? { [key]: storage[key] } : { ...storage };
-      if (callback) callback(result);
-      return Promise.resolve(result);
-    }),
-    
-    set: sinon.stub().callsFake((items, callback) => {
-      Object.assign(storage, items);
-      if (callback) callback();
-      return Promise.resolve();
-    }),
-    
-    remove: sinon.stub().callsFake((key, callback) => {
-      delete storage[key];
-      if (callback) callback();
-      return Promise.resolve();
-    }),
-    
-    clear: sinon.stub().callsFake((callback) => {
-      Object.keys(storage).forEach((key) => delete storage[key]);
-      if (callback) callback();
-      return Promise.resolve();
-    }),
-    
-    // Helper to directly access the storage data (for test assertions)
-    _data: storage,
+  // Use a shared object to store data
+  const mockStorage = {
+    _data: { ...initialData }
   };
+  
+  // Create methods that operate on the _data property
+  mockStorage.get = sinon.stub().callsFake((key, callback) => {
+    let result;
+    if (key === null) {
+      // Get all items
+      result = { ...mockStorage._data };
+    } else if (typeof key === 'string') {
+      // Get a specific item
+      result = { [key]: mockStorage._data[key] };
+    } else if (Array.isArray(key)) {
+      // Get multiple items
+      result = {};
+      key.forEach(k => {
+        if (mockStorage._data[k] !== undefined) {
+          result[k] = mockStorage._data[k];
+        }
+      });
+    } else {
+      // Get items matching object keys
+      result = {};
+      Object.keys(key).forEach(k => {
+        result[k] = mockStorage._data[k] !== undefined ? mockStorage._data[k] : key[k];
+      });
+    }
+    
+    if (callback) callback(result);
+    return Promise.resolve(result);
+  });
+  
+  mockStorage.set = sinon.stub().callsFake((items, callback) => {
+    Object.assign(mockStorage._data, items);
+    if (callback) callback();
+    return Promise.resolve();
+  });
+  
+  mockStorage.remove = sinon.stub().callsFake((key, callback) => {
+    if (Array.isArray(key)) {
+      key.forEach(k => delete mockStorage._data[k]);
+    } else {
+      delete mockStorage._data[key];
+    }
+    if (callback) callback();
+    return Promise.resolve();
+  });
+  
+  mockStorage.clear = sinon.stub().callsFake((callback) => {
+    mockStorage._data = {};
+    if (callback) callback();
+    return Promise.resolve();
+  });
+  
+  return mockStorage;
 }
 
 /**
@@ -173,6 +221,7 @@ export function setupPopupTest(options = {}) {
         <div id="header">
           <a href="#" id="runJavascript">Save &amp; Run</a>
           <a href="#" id="help_a">Help</a>
+          <div id="status-indicator" class="enabled">Enabled</div>
           <div id="lblUpdated">Changes has been applied..</div>
           <div id="runToggleOnHost">
             <input type="checkbox" id="chkToggleOnHost" />
@@ -186,8 +235,26 @@ export function setupPopupTest(options = {}) {
               <option value="jquery_1_12_4">jQuery 1.12.4</option>
             </select>
           </div>
+          <button id="sidebar-toggle" aria-label="Toggle sidebar" aria-expanded="false" aria-controls="sidebar">
+            <span class="toggle-icon">≡</span>
+          </button>
         </div>
-        <div id="editor"></div>
+        <div class="main-container">
+          <div id="sidebar">
+            <div class="sidebar-header">
+              <h3>Scripts</h3>
+            </div>
+            <div class="sidebar-content">
+              <ul id="script-list" role="list" aria-label="Available scripts">
+                <!-- Script items will be populated dynamically -->
+              </ul>
+              <div class="empty-script-list" style="display: none;">
+                <p>No scripts available</p>
+              </div>
+            </div>
+          </div>
+          <div id="editor"></div>
+        </div>
       </body>
     </html>
   `, { url: 'chrome-extension://mock-extension-id/popup.html' });

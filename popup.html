@@ -3,34 +3,92 @@
   <head>
     <title>Run Javascript</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="storage.js"></script>
     <script src="popup.js"></script>
   </head>
   <body>
     <div id="header">
-      <a href="#" id="runJavascript">Save &amp; Run</a>
-      <a href="https://ataiva.com/run-javascript-chrome-extension-help/?from=extension&click=help" target="_blank" id="help_a">Help</a>
-
+      <div class="header-content">
+        <div class="header-brand">
+          <div class="brand-logo">
+            <img src="icon.png" alt="Run JavaScript Extension" class="extension-icon">
+          </div>
+          <div class="header-title">
+            <h1 class="extension-title">Run JavaScript</h1>
+            <span class="extension-subtitle">Custom script execution</span>
+          </div>
+        </div>
+        <div class="header-center">
+          <button id="sidebar-toggle" aria-label="Toggle sidebar" aria-expanded="false" aria-controls="sidebar">
+            <div class="hamburger-icon"></div>
+          </button>
+        </div>
+        <div class="header-actions">
+          <a href="https://ataiva.com/run-javascript-chrome-extension-help/?from=extension&click=help" target="_blank" id="help_a" class="header-link">
+            <span class="help-icon">?</span>
+            Help
+          </a>
+        </div>
+      </div>
       <div id="lblUpdated">Changes has been applied..</div>
 
-      <div id="runToggleOnHost">
-        <!--<input type="text" id="regexMatchHost" value="" placeholder="" />
-        <input type="checkbox" id="chkToggleOnHost" /> <label for="chkToggleOnHost" id="chkToggleOnHost_span">Enable</label>-->
-        <input type="checkbox" id="chkToggleOnHost" /> <label for="chkToggleOnHost" id="chkToggleOnHost_span">Enable on <span id='_toggle_host_name'></span></label>
+      <div id="script-toggle-container">
+        <div class="toggle-switch-wrapper">
+          <label class="toggle-switch" for="chkToggleOnHost">
+            <input type="checkbox" id="chkToggleOnHost" />
+            <span class="toggle-slider"></span>
+          </label>
+          <div class="toggle-info">
+            <span class="toggle-status" id="toggle-status">Enabled</span>
+            <span class="toggle-domain">on <span id='_toggle_host_name'></span></span>
+          </div>
+        </div>
       </div>
-
-      
-      <div id="libraryDropdownContainer">
-        <select id="slLibrary">
-          <option value="" selected="">Don't use a library..</option>
-          <option value="jquery_3_3_1">jQuery 3.3.1</option>
-          <option value="jquery_2_2_4">jQuery 2.2.4</option>
-          <option value="jquery_1_12_4">jQuery 1.12.4</option>
-        </select>
-      </div>
-     
-      
     </div>
-    <div id="editor"></div>
+    
+    <div class="main-container">
+      <div id="sidebar">
+        <div class="sidebar-header">
+          <h3>Scripts</h3>
+          <div class="sidebar-actions">
+            <button id="export-scripts" class="action-button" title="Export all scripts">Export</button>
+            <button id="import-scripts" class="action-button" title="Import scripts">Import</button>
+          </div>
+        </div>
+        <div class="sidebar-content">
+          <ul id="script-list" role="list" aria-label="Available scripts">
+            <!-- Script items will be populated dynamically -->
+          </ul>
+          <div class="empty-script-list" style="display: none;">
+            <p>No scripts available</p>
+          </div>
+        </div>
+      </div>
+      <div class="editor-container">
+        <div class="editor-toolbar">
+          <div class="editor-info">
+            <span class="editor-label">JavaScript Editor</span>
+            <span class="editor-hint">Write your custom JavaScript code below</span>
+          </div>
+          <div class="editor-controls">
+            <div class="library-selector">
+              <label for="slLibrary" class="library-label">Library:</label>
+              <select id="slLibrary" class="library-dropdown">
+                <option value="" selected="">None</option>
+                <option value="jquery_3_3_1">jQuery 3.3.1</option>
+                <option value="jquery_2_2_4">jQuery 2.2.4</option>
+                <option value="jquery_1_12_4">jQuery 1.12.4</option>
+              </select>
+            </div>
+            <button id="runJavascript" class="run-button">
+              <span class="run-icon"></span>
+              Execute
+            </button>
+          </div>
+        </div>
+        <div id="editor"></div>
+      </div>
+    </div>
 
     <script src="ace.js" type="text/javascript" charset="utf-8"></script>
   </body>

@@ -398,13 +398,24 @@ describe('popup.js', () => {
 // Extract the extractHostname function from popup.js
 const extractHostnameFunction = `
 function extractHostname(url) {
+  if (!url) return;
   var hostname;
   if (url.indexOf("://") > -1) {
     hostname = url.split('/')[2];
   } else {
     hostname = url.split('/')[0];
   }
-  hostname = hostname.split(':')[0];
+  
+  // Special handling for IPv6 addresses which are enclosed in square brackets
+  if (hostname.startsWith('[') && hostname.includes(']')) {
+    // For IPv6, keep everything up to the closing bracket
+    var closingBracketPos = hostname.indexOf(']');
+    hostname = hostname.substring(0, closingBracketPos + 1);
+  } else {
+    // For regular hostnames, remove port if present
+    hostname = hostname.split(':')[0];
+  }
+  
   hostname = hostname.split('?')[0];
   return hostname;
 }

@@ -2,6 +2,30 @@
 import sinon from 'sinon';
 
 /**
+ * Creates a Chrome event with addListener, removeListener, and trigger methods
+ * @returns {Object} Mock Chrome event object
+ */
+function createChromeEvent() {
+  const listeners = [];
+  return {
+    addListener: sinon.stub().callsFake((listener) => {
+      listeners.push(listener);
+    }),
+    removeListener: sinon.stub().callsFake((listener) => {
+      const index = listeners.indexOf(listener);
+      if (index !== -1) {
+        listeners.splice(index, 1);
+      }
+    }),
+    trigger: function(...args) {
+      listeners.forEach((listener) => {
+        listener(...args);
+      });
+    }
+  };
+}
+
+/**
  * Creates a comprehensive mock of the Chrome extension API
  * @returns {Object} Mock Chrome API
  */
@@ -16,7 +40,7 @@ export function createMockChromeAPI() {
         remove: sinon.stub(),
         clear: sinon.stub(),
         getBytesInUse: sinon.stub(),
-        onChanged: { addListener: sinon.stub(), removeListener: sinon.stub() },
+        onChanged: createChromeEvent(),
       },
       local: {
         get: sinon.stub(),
@@ -24,7 +48,7 @@ export function createMockChromeAPI() {
         remove: sinon.stub(),
         clear: sinon.stub(),
         getBytesInUse: sinon.stub(),
-        onChanged: { addListener: sinon.stub(), removeListener: sinon.stub() },
+        onChanged: createChromeEvent(),
       },
       session: {
         get: sinon.stub(),
@@ -32,9 +56,9 @@ export function createMockChromeAPI() {
         remove: sinon.stub(),
         clear: sinon.stub(),
         getBytesInUse: sinon.stub(),
-        onChanged: { addListener: sinon.stub(), removeListener: sinon.stub() },
+        onChanged: createChromeEvent(),
       },
-      onChanged: { addListener: sinon.stub(), removeListener: sinon.stub() },
+      onChanged: createChromeEvent(),
     },
 
     // Tabs API
@@ -59,16 +83,16 @@ export function createMockChromeAPI() {
       discard: sinon.stub(),
       goBack: sinon.stub(),
       goForward: sinon.stub(),
-      onCreated: { addListener: sinon.stub(), removeListener: sinon.stub() },
-      onUpdated: { addListener: sinon.stub(), removeListener: sinon.stub() },
-      onMoved: { addListener: sinon.stub(), removeListener: sinon.stub() },
-      onActivated: { addListener: sinon.stub(), removeListener: sinon.stub() },
-      onHighlighted: { addListener: sinon.stub(), removeListener: sinon.stub() },
-      onDetached: { addListener: sinon.stub(), removeListener: sinon.stub() },
-      onAttached: { addListener: sinon.stub(), removeListener: sinon.stub() },
-      onRemoved: { addListener: sinon.stub(), removeListener: sinon.stub() },
-      onReplaced: { addListener: sinon.stub(), removeListener: sinon.stub() },
-      onZoomChange: { addListener: sinon.stub(), removeListener: sinon.stub() },
+      onCreated: createChromeEvent(),
+      onUpdated: createChromeEvent(),
+      onMoved: createChromeEvent(),
+      onActivated: createChromeEvent(),
+      onHighlighted: createChromeEvent(),
+      onDetached: createChromeEvent(),
+      onAttached: createChromeEvent(),
+      onRemoved: createChromeEvent(),
+      onReplaced: createChromeEvent(),
+      onZoomChange: createChromeEvent(),
     },
 
     // Runtime API
@@ -83,14 +107,14 @@ export function createMockChromeAPI() {
       }),
       connect: sinon.stub(),
       sendMessage: sinon.stub(),
-      onMessage: { addListener: sinon.stub(), removeListener: sinon.stub() },
-      onConnect: { addListener: sinon.stub(), removeListener: sinon.stub() },
-      onInstalled: { addListener: sinon.stub(), removeListener: sinon.stub() },
-      onStartup: { addListener: sinon.stub(), removeListener: sinon.stub() },
-      onUpdateAvailable: { addListener: sinon.stub(), removeListener: sinon.stub() },
-      onSuspend: { addListener: sinon.stub(), removeListener: sinon.stub() },
-      onSuspendCanceled: { addListener: sinon.stub(), removeListener: sinon.stub() },
-      onRestartRequired: { addListener: sinon.stub(), removeListener: sinon.stub() },
+      onMessage: createChromeEvent(),
+      onConnect: createChromeEvent(),
+      onInstalled: createChromeEvent(),
+      onStartup: createChromeEvent(),
+      onUpdateAvailable: createChromeEvent(),
+      onSuspend: createChromeEvent(),
+      onSuspendCanceled: createChromeEvent(),
+      onRestartRequired: createChromeEvent(),
     },
 
     // Scripting API (Manifest V3)
@@ -118,7 +142,7 @@ export function createMockChromeAPI() {
       isEnabled: sinon.stub(),
       setPopup: sinon.stub(),
       getPopup: sinon.stub(),
-      onClicked: { addListener: sinon.stub(), removeListener: sinon.stub() },
+      onClicked: createChromeEvent(),
     },
 
     // Alarms API
@@ -128,7 +152,7 @@ export function createMockChromeAPI() {
       getAll: sinon.stub(),
       clear: sinon.stub(),
       clearAll: sinon.stub(),
-      onAlarm: { addListener: sinon.stub(), removeListener: sinon.stub() },
+      onAlarm: createChromeEvent(),
     },
   };
 

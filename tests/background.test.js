@@ -84,7 +84,17 @@ describe('background.js', () => {
           } else {
             hostname = url.split('/')[0];
           }
-          hostname = hostname.split(':')[0];
+          
+          // Special handling for IPv6 addresses which are enclosed in square brackets
+          if (hostname.startsWith('[') && hostname.includes(']')) {
+            // For IPv6, keep everything up to the closing bracket
+            const closingBracketPos = hostname.indexOf(']');
+            hostname = hostname.substring(0, closingBracketPos + 1);
+          } else {
+            // For regular hostnames, remove port if present
+            hostname = hostname.split(':')[0];
+          }
+          
           hostname = hostname.split('?')[0];
           return hostname;
         };
@@ -116,7 +126,17 @@ describe('background.js', () => {
             } else {
               hostname = url.split('/')[0];
             }
-            hostname = hostname.split(':')[0];
+            
+            // Special handling for IPv6 addresses which are enclosed in square brackets
+            if (hostname.startsWith('[') && hostname.includes(']')) {
+              // For IPv6, keep everything up to the closing bracket
+              const closingBracketPos = hostname.indexOf(']');
+              hostname = hostname.substring(0, closingBracketPos + 1);
+            } else {
+              // For regular hostnames, remove port if present
+              hostname = hostname.split(':')[0];
+            }
+            
             hostname = hostname.split('?')[0];
             return hostname;
           };
@@ -486,6 +506,9 @@ describe('background.js', () => {
         chrome.storage.sync.get('key', (data) => {});
       };
       
+      // Reset the stub before the test
+      chrome.storage.sync.get.resetHistory();
+      
       // Call with a tab that has no URL
       executeScriptForTab({ id: 123 });
       
@@ -506,7 +529,17 @@ describe('background.js', () => {
         } else {
           hostname = url.split('/')[0];
         }
-        hostname = hostname.split(':')[0];
+        
+        // Special handling for IPv6 addresses which are enclosed in square brackets
+        if (hostname.startsWith('[') && hostname.includes(']')) {
+          // For IPv6, keep everything up to the closing bracket
+          const closingBracketPos = hostname.indexOf(']');
+          hostname = hostname.substring(0, closingBracketPos + 1);
+        } else {
+          // For regular hostnames, remove port if present
+          hostname = hostname.split(':')[0];
+        }
+        
         hostname = hostname.split('?')[0];
         return hostname;
       };
@@ -542,6 +575,9 @@ describe('background.js', () => {
       
       // Setup mock tab
       const tab = { id: 123, url: 'https://example.com' };
+      
+      // Reset the stub before the test
+      chrome.storage.sync.get.resetHistory();
       
       // Setup storage.get to return test data
       chrome.storage.sync.get.callsFake((key, callback) => {

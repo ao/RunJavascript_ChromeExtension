@@ -9,6 +9,7 @@ chrome.runtime.sendMessage({action: 'content_script_loaded'}, function(response)
 
 // Utility function kept for potential future use
 function extractHostname(url) {
+    if (!url) return;
     var hostname;
     if (url.indexOf("://") > -1) {
         hostname = url.split('/')[2];
