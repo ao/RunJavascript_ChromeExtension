@@ -10,9 +10,9 @@
     "tabs"
   ],
   "action": {
-      "default_title": "Run Javascript",
-      "default_icon": "icon.png",
-      "default_popup": "popup.html"
+    "default_title": "Run Javascript",
+    "default_icon": "icon.png",
+    "default_popup": "popup.html"
   },
   "icons": {
     "16": "icon.png",
@@ -27,14 +27,16 @@
     "service_worker": "background.js"
   },
   "content_scripts": [
-      {
+    {
       "matches": [
         "http://*/*",
         "https://*/*"
       ],
-      "js": ["inject.js"],
+      "js": [
+        "inject.js"
+      ],
       "run_at": "document_idle"
-      }
+    }
   ],
   "host_permissions": [
     "http://*/*",
@@ -44,12 +46,21 @@
     "extension_pages": "script-src 'self'; object-src 'self'"
   },
   "sandbox": {
-    "pages": ["sandbox.html"]
+    "pages": [
+      "sandbox.html"
+    ]
   },
   "web_accessible_resources": [
     {
-      "resources": ["lib_jquery_3_3_1.js", "lib_jquery_2_2_4.js", "lib_jquery_1_12_4.js", "sandbox.html"],
-      "matches": ["<all_urls>"]
+      "resources": [
+        "lib_jquery_3_3_1.js",
+        "lib_jquery_2_2_4.js",
+        "lib_jquery_1_12_4.js",
+        "sandbox.html"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
     }
   ],
   "manifest_version": 3
