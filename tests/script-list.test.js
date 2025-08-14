@@ -179,7 +179,7 @@ describe('Script List in Sidebar', () => {
       // Add a new script to storage
       const newScript = { code: 'console.log("New script");', enabled: true, library: '' };
       storageData['runjavascript_new.com'] = newScript;
-      chrome.storage.sync.set({ 'runjavascript_new.com': newScript });
+      chrome.storage.sync.set({ 'runjavascript_new.com': newScript }, () => {});
       
       // Trigger storage change event
       const changeObj = { 'runjavascript_new.com': { newValue: newScript } };
