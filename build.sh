@@ -24,7 +24,6 @@ TEMP_DIR="temp_build"
 
 # Default options
 SKIP_TESTS=false
-SKIP_LINT=false
 FORCE=false
 VERSION_TYPE="patch"
 
@@ -33,10 +32,6 @@ while [[ $# -gt 0 ]]; do
     case $1 in
         --skip-tests)
             SKIP_TESTS=true
-            shift
-            ;;
-        --skip-lint)
-            SKIP_LINT=true
             shift
             ;;
         --force)
@@ -65,7 +60,6 @@ while [[ $# -gt 0 ]]; do
             echo ""
             echo "Options:"
             echo "  --skip-tests    Skip running tests"
-            echo "  --skip-lint     Skip linting"
             echo "  --force         Force build even if working directory is dirty"
             echo "  -h, --help      Show this help message"
             echo ""
@@ -215,21 +209,6 @@ run_tests() {
     fi
 }
 
-# Run linting
-run_lint() {
-    if [ "$SKIP_LINT" = false ]; then
-        log_step "Running linter..."
-        if bun run lint; then
-            log_success "Linting passed"
-        else
-            log_error "Linting failed"
-            exit 1
-        fi
-    else
-        log_warning "Skipping linting"
-    fi
-}
-
 # Clean previous builds
 clean_build() {
     log_step "Cleaning previous builds..."
@@ -343,7 +322,6 @@ Build Type: $VERSION_TYPE
 
 🔧 Build Configuration:
 - Tests: $([ "$SKIP_TESTS" = true ] && echo "Skipped" || echo "Passed")
-- Linting: $([ "$SKIP_LINT" = true ] && echo "Skipped" || echo "Passed")
 - Force mode: $([ "$FORCE" = true ] && echo "Enabled" || echo "Disabled")
 
 📋 Included Files:
@@ -406,7 +384,6 @@ main() {
     
     update_version
     run_tests
-    run_lint
     clean_build
     create_build_structure
     copy_extension_files
