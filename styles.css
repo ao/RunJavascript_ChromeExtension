@@ -372,6 +372,56 @@ body {
     transform: translateY(-1px);
   }
   
+  .gofaster-promo {
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    z-index: 1000;
+  }
+  
+  .gofaster-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.75rem;
+    padding: 4px 9px;
+    border-radius: 6px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    transition: all 0.2s ease;
+  }
+  
+  .gofaster-link:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  }
+  
+  .gofaster-icon {
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+  }
+  
+  .gofaster-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  
+  .gofaster-title {
+    font-weight: 600;
+    font-size: 0.8rem;
+    font-style: italic;
+  }
+  
+  .gofaster-desc {
+    font-size: 0.65rem;
+    opacity: 0.9;
+  }
+  
   .help-icon {
     display: inline-flex;
     align-items: center;
