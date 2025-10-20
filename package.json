@@ -1,6 +1,6 @@
 {
   "name": "run-javascript-chrome-extension",
-  "version": "5.1.0",
+  "version": "5.1.1",
   "description": "Run custom Javascript, each time you visit a website",
   "type": "module",
   "scripts": {
