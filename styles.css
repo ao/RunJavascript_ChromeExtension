@@ -1,7 +1,7 @@
 body {
     overflow: hidden;
     margin: 0;
-    padding: 0;
+    padding: 0 0 80px 0;
     background: white;
     font-size: 16px;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -22,7 +22,7 @@ body {
   .main-container {
     display: flex;
     width: 100%;
-    height: 91vh; /* Doubled from 80vh to 160vh */
+    height: calc(91vh - 86px); /* Subtract status bar height */
     position: relative;
   }
   
@@ -372,55 +372,7 @@ body {
     transform: translateY(-1px);
   }
   
-  .gofaster-promo {
-    position: absolute;
-    top: 4px;
-    right: 6px;
-    z-index: 1000;
-  }
-  
-  .gofaster-link {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #fff;
-    text-decoration: none;
-    font-size: 0.75rem;
-    padding: 4px 9px;
-    border-radius: 6px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    transition: all 0.2s ease;
-  }
-  
-  .gofaster-link:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-  }
-  
-  .gofaster-icon {
-    width: 26px;
-    height: 26px;
-    flex-shrink: 0;
-  }
-  
-  .gofaster-info {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-  
-  .gofaster-title {
-    font-weight: 600;
-    font-size: 0.8rem;
-    font-style: italic;
-  }
-  
-  .gofaster-desc {
-    font-size: 0.65rem;
-    opacity: 0.9;
-  }
+
   
   .help-icon {
     display: inline-flex;
@@ -988,7 +940,7 @@ body {
     }
     
     .main-container {
-      height: 91vh; /* Doubled from 85vh to 170vh */
+      height: calc(91vh - 80px); /* Account for status bar */
     }
     
     #sidebar {
@@ -1109,3 +1061,42 @@ body {
       font-size: 1.1rem;
     }
   }
+/* Status Bar */
+#status-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  z-index: 1000;
+}
+
+.status-content {
+  padding: 4px 16px;
+}
+
+.status-promo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 15px;
+  transition: opacity 0.2s ease;
+}
+
+.status-promo:hover {
+  opacity: 0.8;
+}
+
+.status-icon {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: 5px;
+}
+
+.status-text {
+  font-weight: 500;
+}
