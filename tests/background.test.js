@@ -576,8 +576,8 @@ describe('background.js', () => {
       // Setup mock tab
       const tab = { id: 123, url: 'https://example.com' };
       
-      // Reset the stub before the test
-      chrome.storage.sync.get.resetHistory();
+      // Fully reset the stub before overriding behavior
+      chrome.storage.sync.get.reset();
       
       // Setup storage.get to return test data
       chrome.storage.sync.get.callsFake((key, callback) => {
