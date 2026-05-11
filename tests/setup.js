@@ -42,8 +42,8 @@ beforeAll(() => {
 
 // Clean up after each test
 afterEach(() => {
-  // Reset all sinon stubs/mocks
-  sinon.restore();
+  // Note: Do NOT call sinon.restore() here as it destroys the global chrome
+  // mock stubs created in beforeAll. Each test file manages its own sandbox.
 });
 
 // Clean up after all tests

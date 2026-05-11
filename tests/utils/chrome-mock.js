@@ -220,12 +220,12 @@ export function createMockChromeAPI() {
  * @param {Object} chrome - The mocked Chrome API object
  */
 export function resetChromeMocks(chrome) {
-  // Reset all stubs
+  // Reset all stubs (clears history and behavior)
   Object.values(chrome).forEach((namespace) => {
     if (namespace && typeof namespace === 'object') {
       Object.values(namespace).forEach((prop) => {
-        if (prop && typeof prop === 'object' && prop.reset) {
-          prop.reset();
+        if (prop && typeof prop === 'object' && prop.resetHistory) {
+          prop.resetHistory();
         }
       });
     }
@@ -233,4 +233,34 @@ export function resetChromeMocks(chrome) {
 
   // Clear lastError
   chrome.runtime.lastError = null;
+
+  // Re-establish default behaviors
+  chrome.storage.sync.get.callsFake((keys, callback) => {
+    if (typeof callback === 'function') callback({});
+    return Promise.resolve({});
+  });
+  chrome.storage.local.get.callsFake((keys, callback) => {
+    if (typeof callback === 'function') callback({});
+    return Promise.resolve({});
+  });
+  chrome.storage.sync.set.callsFake((items, callback) => {
+    if (typeof callback === 'function') callback();
+    return Promise.resolve();
+  });
+  chrome.storage.local.set.callsFake((items, callback) => {
+    if (typeof callback === 'function') callback();
+    return Promise.resolve();
+  });
+  chrome.tabs.query.callsFake((queryInfo, callback) => {
+    const tabs = [{ id: 1, url: 'https://example.com', active: true, currentWindow: true }];
+    if (typeof callback === 'function') callback(tabs);
+    return Promise.resolve(tabs);
+  });
+  chrome.runtime.sendMessage.callsFake((message, callback) => {
+    if (typeof callback === 'function') callback({});
+    return Promise.resolve({});
+  });
+  chrome.scripting.executeScript.callsFake((details) => {
+    return Promise.resolve([{ frameId: 0, result: undefined }]);
+  });
 }
