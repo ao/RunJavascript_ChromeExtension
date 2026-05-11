@@ -132,8 +132,10 @@ function shouldExecuteScript(tabId, url, code, isManualExecution = false) {
 }
 
 // Handle extension installation
-chrome.runtime.onInstalled.addListener(function () {
-  chrome.tabs.create({ url: "https://ataiva.com/run-javascript-chrome-extension-help/" });
+chrome.runtime.onInstalled.addListener(function (details) {
+  if (details.reason === 'install') {
+    chrome.tabs.create({ url: "https://ataiva.com/run-javascript-chrome-extension-help/" });
+  }
 });
 
 // Listen for messages from other parts of the extension
